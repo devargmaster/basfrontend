@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button } from '@mui/material';
 
 export default function ProductForm({ onProductAdded }) {
   const [form, setForm] = useState({ nombre: '', descripcion: '', precio: '', stock: '' });
@@ -26,38 +27,42 @@ export default function ProductForm({ onProductAdded }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '1rem' }}>
-      <input
+    <form onSubmit={handleSubmit} className="space-y-2 mb-4">
+      <TextField
+        label="Nombre"
         name="nombre"
         value={form.nombre}
         onChange={handleChange}
-        placeholder="Nombre del producto"
+        fullWidth
         required
       />
-      <input
+      <TextField
+        label="Descripción"
         name="descripcion"
         value={form.descripcion}
         onChange={handleChange}
-        placeholder="Descripción"
+        fullWidth
         required
       />
-      <input
+      <TextField
+        label="Precio"
         name="precio"
         type="number"
         value={form.precio}
         onChange={handleChange}
-        placeholder="Precio"
+        fullWidth
         required
       />
-      <input
+      <TextField
+        label="Stock"
         name="stock"
         type="number"
         value={form.stock}
         onChange={handleChange}
-        placeholder="Stock"
+        fullWidth
         required
       />
-      <button type="submit">Agregar Producto</button>
+      <Button variant="contained" type="submit">Agregar Producto</Button>
     </form>
   );
 }

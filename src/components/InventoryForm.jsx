@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button } from '@mui/material';
 
 export default function InventoryForm() {
   const [form, setForm] = useState({ productoId: '', cantidad: 0 });
@@ -24,21 +25,23 @@ export default function InventoryForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '1rem' }}>
-      <input
+    <form onSubmit={handleSubmit} className="space-y-2 mb-4">
+      <TextField
+        label="ID Producto"
         name="productoId"
-        placeholder="ID Producto"
         value={form.productoId}
         onChange={handleChange}
+        fullWidth
       />
-      <input
+      <TextField
+        label="Cantidad"
         name="cantidad"
         type="number"
-        placeholder="Cantidad"
         value={form.cantidad}
         onChange={handleChange}
+        fullWidth
       />
-      <button type="submit">Agregar</button>
+      <Button variant="contained" type="submit">Agregar</Button>
     </form>
   );
 }
