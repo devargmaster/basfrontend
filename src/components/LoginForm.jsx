@@ -54,6 +54,7 @@ export default function LoginForm({ onLogin }) {
           <h3 className="text-sm font-medium text-blue-800 mb-2">Usuarios de prueba:</h3>
           <div className="text-xs text-blue-700 space-y-1">
             <div><strong>Admin:</strong> admin / admin123</div>
+            <div><strong>Usuario:</strong> warce / 123456</div>
             <div><strong>Usuario:</strong> jperez / juan123</div>
             <div><strong>Usuario:</strong> mgarcia / maria123</div>
           </div>
