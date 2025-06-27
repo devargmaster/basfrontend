@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 export default function Dashboard({ user }) {
   const [stats, setStats] = useState({
-    totalProducts: 0,
-    totalStock: 0,
-    lowStock: 0,
-    activeUsers: 0
+    totalProductos: 0,
+    totalUsuarios: 0,
+    totalCategorias: 0,
+    valorTotalInventario: 0,
+    productosStockBajo: 0,
+    movimientosRecientes: [],
+    topCategorias: []
   });
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +63,7 @@ export default function Dashboard({ user }) {
                     Total Productos
                   </dt>
                   <dd className="text-lg font-medium text-gray-900">
-                    {loading ? '...' : stats.totalProducts}
+                    {loading ? '...' : stats.totalProductos}
                   </dd>
                 </dl>
               </div>
@@ -79,10 +82,10 @@ export default function Dashboard({ user }) {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">
-                    Items en Stock
+                    Valor Total Inventario
                   </dt>
                   <dd className="text-lg font-medium text-gray-900">
-                    {loading ? '...' : stats.totalStock}
+                    {loading ? '...' : `$${stats.valorTotalInventario?.toLocaleString() || 0}`}
                   </dd>
                 </dl>
               </div>
@@ -104,7 +107,7 @@ export default function Dashboard({ user }) {
                     Stock Bajo
                   </dt>
                   <dd className="text-lg font-medium text-gray-900">
-                    {loading ? '...' : stats.lowStock}
+                    {loading ? '...' : stats.productosStockBajo}
                   </dd>
                 </dl>
               </div>
@@ -123,10 +126,10 @@ export default function Dashboard({ user }) {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">
-                    Usuarios Activos
+                    Total Usuarios
                   </dt>
                   <dd className="text-lg font-medium text-gray-900">
-                    {loading ? '...' : stats.activeUsers}
+                    {loading ? '...' : stats.totalUsuarios}
                   </dd>
                 </dl>
               </div>
@@ -139,12 +142,84 @@ export default function Dashboard({ user }) {
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Actividad Reciente
+            Movimientos Recientes
           </h3>
           <div className="mt-5">
-            <div className="text-sm text-gray-500">
-              <p>No hay actividad reciente para mostrar.</p>
-            </div>
+            {loading ? (
+              <div className="text-sm text-gray-500">Cargando...</div>
+            ) : stats.movimientosRecientes && stats.movimientosRecientes.length > 0 ? (
+              <div className="space-y-3">
+                {stats.movimientosRecientes.map((movimiento, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-md">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-2 h-2 rounded-full ${
+                        movimiento.tipoMovimiento === 'Entrada' ? 'bg-green-500' : 
+                        movimiento.tipoMovimiento === 'Salida' ? 'bg-red-500' : 'bg-blue-500'
+                      }`}></div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{movimiento.producto}</p>
+                        <p className="text-sm text-gray-500">
+                          {movimiento.tipoMovimiento}: {movimiento.cantidad} unidades
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-500">{movimiento.usuario}</p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(movimiento.fecha).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500">
+                <p>No hay movimientos recientes para mostrar.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Top Categorías */}
+      <div className="bg-white shadow rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            Categorías Principales
+          </h3>
+          <div className="mt-5">
+            {loading ? (
+              <div className="text-sm text-gray-500">Cargando...</div>
+            ) : stats.topCategorias && stats.topCategorias.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {stats.topCategorias.map((categoria) => (
+                  <div key={categoria.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center space-x-3">
+                      <div 
+                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg"
+                        style={{ backgroundColor: categoria.color }}
+                      >
+                        {categoria.icono}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-medium text-gray-900">{categoria.nombre}</h4>
+                        <p className="text-sm text-gray-500">{categoria.totalProductos} productos</p>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <p className="text-lg font-semibold text-gray-900">
+                        ${categoria.valorInventario?.toLocaleString() || 0}
+                      </p>
+                      <p className="text-xs text-gray-500">Valor de inventario</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500">
+                <p>No hay categorías para mostrar.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
