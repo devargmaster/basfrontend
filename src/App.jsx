@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import ProductForm from './components/ProductForm';
 import ProductList from './components/ProductList';
+import InventoryForm from './components/InventoryForm';
+
 
 export default function App() {
   const listRef = useRef();
@@ -9,10 +11,13 @@ export default function App() {
   const [refresh, setRefresh] = React.useState(false);
 
   return (
-    <div>
-      <h1>Productos</h1>
-      <ProductForm onProductAdded={() => setRefresh(r => !r)} />
-      <ProductList key={refresh} />
+      <div className="container mx-auto p-4 space-y-6">
+      <h1 className="text-2xl font-bold">Productos</h1>
+        <ProductForm onProductAdded={() => setRefresh(r => !r)} />
+        <ProductList key={refresh} />
+      <h2 className="text-xl font-bold">Movimiento de Inventario</h2>
+      <InventoryForm />
+      
     </div>
   );
 }
