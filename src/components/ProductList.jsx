@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function ProductList() {
+export default function ProductList({ refresh }) {
   const [products, setProducts] = useState([]);
   const [productsWithStock, setProductsWithStock] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +38,14 @@ export default function ProductList() {
     fetchProducts();
     fetchProductsWithStock();
   }, []);
+
+  // Efecto para refrescar cuando cambie el prop refresh
+  useEffect(() => {
+    if (refresh !== undefined) {
+      fetchProducts();
+      fetchProductsWithStock();
+    }
+  }, [refresh]);
 
   const handleDelete = async (id) => {
     if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) {

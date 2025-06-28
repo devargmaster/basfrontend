@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Dashboard from './Dashboard';
 import ProductForm from './ProductForm';
 import ProductList from './ProductList';
@@ -8,15 +8,11 @@ import UserForm from './UserForm';
 import UserList from './UserList';
 
 export default function MainContent({ user, currentView }) {
-  const listRef = useRef();
   const [refresh, setRefresh] = useState(false);
   const [showProductForm, setShowProductForm] = useState(false);
 
   const handleProductAdded = () => {
     setRefresh(!refresh);
-    if (listRef.current) {
-      listRef.current.refreshList();
-    }
     setShowProductForm(false); // Cerrar formulario después de crear
   };
 
@@ -71,7 +67,7 @@ export default function MainContent({ user, currentView }) {
             {/* Lista de productos */}
             <div className="bg-white shadow rounded-lg">
               <div className="px-4 py-5 sm:p-6">
-                <ProductList ref={listRef} refresh={refresh} />
+                <ProductList refresh={refresh} />
               </div>
             </div>
           </div>
