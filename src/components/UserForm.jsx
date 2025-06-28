@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiGet, apiPost } from '../utils/api.js';
 
-export default function UserForm({ onUserAdded }) {
+export default function UserForm({ onUserAdded, onCancel }) {
   const [form, setForm] = useState({ 
     nombre: '', 
     apellido: '', 
@@ -168,17 +168,28 @@ export default function UserForm({ onUserAdded }) {
         </select>
       </div>
       
-      <button 
-        type="submit" 
-        disabled={loading}
-        className={`w-full px-4 py-2 text-white rounded-md font-medium transition-colors ${
-          loading 
-            ? 'bg-gray-400 cursor-not-allowed' 
-            : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-        }`}
-      >
-        {loading ? 'Creando...' : 'Crear Usuario'}
-      </button>
+      <div className="flex justify-end space-x-3">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
+          >
+            Cancelar
+          </button>
+        )}
+        <button 
+          type="submit" 
+          disabled={loading}
+          className={`px-4 py-2 text-white rounded-md font-medium transition-colors ${
+            loading 
+              ? 'bg-gray-400 cursor-not-allowed' 
+              : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+          }`}
+        >
+          {loading ? 'Creando...' : 'Crear Usuario'}
+        </button>
+      </div>
     </form>
   );
 }

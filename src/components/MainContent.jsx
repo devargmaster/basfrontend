@@ -13,11 +13,17 @@ export default function MainContent({ user, currentView }) {
   const [refresh, setRefresh] = useState(false);
   const [showProductForm, setShowProductForm] = useState(false);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [showUserForm, setShowUserForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
 
   const handleProductAdded = () => {
     setRefresh(!refresh);
     setShowProductForm(false); // Cerrar formulario después de crear
+  };
+
+  const handleUserAdded = () => {
+    setRefresh(!refresh);
+    setShowUserForm(false);
   };
 
   const handleCategoryAdded = () => {
@@ -203,23 +209,40 @@ export default function MainContent({ user, currentView }) {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Botón para mostrar/ocultar formulario */}
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Lista de Usuarios</h3>
+              <button
+                onClick={() => setShowUserForm(!showUserForm)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  showUserForm
+                    ? 'bg-gray-500 text-white hover:bg-gray-600'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                {showUserForm ? 'Cancelar' : '+ Nuevo Usuario'}
+              </button>
+            </div>
+
+            {/* Formulario colapsable */}
+            {showUserForm && (
               <div className="bg-white shadow rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                    Nuevo Usuario
+                    Crear Nuevo Usuario
                   </h3>
-                  <UserForm onUserAdded={() => setRefresh(!refresh)} />
+                  <UserForm 
+                    onUserAdded={handleUserAdded} 
+                    onCancel={() => setShowUserForm(false)}
+                  />
                 </div>
               </div>
-              
-              <div className="bg-white shadow rounded-lg">
-                <div className="px-4 py-5 sm:p-6">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                    Lista de Usuarios
-                  </h3>
-                  <UserList key={refresh} currentUser={user} />
-                </div>
+            )}
+            
+            {/* Lista de usuarios */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <UserList key={refresh} currentUser={user} />
               </div>
             </div>
           </div>
