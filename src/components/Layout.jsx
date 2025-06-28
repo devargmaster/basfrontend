@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function Layout({ user, onLogout, children }) {
-  const [currentView, setCurrentView] = useState('dashboard');
-
+export default function Layout({ user, onLogout, children, currentView, setCurrentView }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'products', label: 'Productos', icon: '📦' },
-    { id: 'inventory', label: 'Inventario', icon: '📋' },
+    { id: 'products', label: 'Catálogo de Productos', icon: '📦' },
+    { id: 'inventory', label: 'Gestión de Stock', icon: '📋' },
+    { id: 'movements', label: 'Movimientos', icon: '📈' },
     { id: 'users', label: 'Usuarios', icon: '👥' },
   ];
 
@@ -64,7 +63,7 @@ export default function Layout({ user, onLogout, children }) {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {React.cloneElement(children, { currentView, setCurrentView })}
+          {children}
         </main>
       </div>
     </div>
