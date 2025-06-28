@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { apiGet, apiDelete, apiPut } from '../utils/api.js';
 
 export default function ProductList({ refresh }) {
   const [products, setProducts] = useState([]);
@@ -8,30 +9,24 @@ export default function ProductList({ refresh }) {
   const [editForm, setEditForm] = useState({ nombre: '', descripcion: '', precio: '' });
   const [showStock, setShowStock] = useState(false);
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-  const fetchProducts = () => {
-    fetch(`${baseUrl}/api/productos`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error consultando productos', err);
-        setLoading(false);
-      });
+  const fetchProducts = async () => {
+    try {
+      const data = await apiGet('/api/productos');
+      setProducts(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error consultando productos', err);
+      setLoading(false);
+    }
   };
 
-  const fetchProductsWithStock = () => {
-    fetch(`${baseUrl}/api/inventario/productos-con-stock`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProductsWithStock(data);
-      })
-      .catch((err) => {
-        console.error('Error consultando productos con stock', err);
-      });
+  const fetchProductsWithStock = async () => {
+    try {
+      const data = await apiGet('/api/inventario/productos-con-stock');
+      setProductsWithStock(data);
+    } catch (err) {
+      console.error('Error consultando productos con stock', err);
+    }
   };
 
   useEffect(() => {
@@ -53,13 +48,9 @@ export default function ProductList({ refresh }) {
     }
     
     try {
-      const response = await fetch(`${baseUrl}/api/productos/${id}`, { method: 'DELETE' });
-      if (response.ok) {
-        fetchProducts();
-        fetchProductsWithStock();
-      } else {
-        alert('Error al eliminar el producto');
-      }
+      await apiDelete(`/api/productos/${id}`);
+      fetchProducts();
+      fetchProductsWithStock();
     } catch (error) {
       console.error('Error al eliminar producto:', error);
       alert('Error de conexión al eliminar el producto');
@@ -93,18 +84,7 @@ export default function ProductList({ refresh }) {
         modificado: new Date().toISOString()
       };
       
-      const response = await fetch(`${baseUrl}/api/productos/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProduct),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Error en edición:', errorData);
-        alert(`Error al editar: ${response.status} - ${errorData}`);
-        return;
-      }
+      await apiPut(`/api/productos/${editingId}`, updatedProduct);
       
       setEditingId(null);
       setEditForm({ nombre: '', descripcion: '', precio: '', fullProduct: null });

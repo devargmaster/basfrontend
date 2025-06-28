@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiGet, apiPost } from '../utils/api.js';
 
 export default function ProductForm({ onProductAdded }) {
   const [form, setForm] = useState({
@@ -21,19 +22,14 @@ export default function ProductForm({ onProductAdded }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/categorias`);
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      }
+      const data = await apiGet('/api/categorias');
+      setCategories(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -67,41 +63,30 @@ export default function ProductForm({ onProductAdded }) {
         activo: true
       };
 
-      const response = await fetch(`${baseUrl}/api/productos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productData),
-      });
+      await apiPost('/api/productos', productData);
 
-      if (response.ok) {
-        // Resetear formulario
-        setForm({
-          nombre: '',
-          descripcion: '',
-          precio: '',
-          categoriaId: '',
-          marca: '',
-          codigoBarras: '',
-          unidadMedida: 'Unidades',
-          stockMinimo: '',
-          stockMaximo: '',
-          ubicacionFisica: '',
-          fechaVencimiento: '',
-          proveedor: '',
-          notas: ''
-        });
-        
-        if (onProductAdded) {
-          onProductAdded();
-        }
-        
-        alert('Producto creado exitosamente');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Error al crear producto');
+      // Resetear formulario
+      setForm({
+        nombre: '',
+        descripcion: '',
+        precio: '',
+        categoriaId: '',
+        marca: '',
+        codigoBarras: '',
+        unidadMedida: 'Unidades',
+        stockMinimo: '',
+        stockMaximo: '',
+        ubicacionFisica: '',
+        fechaVencimiento: '',
+        proveedor: '',
+        notas: ''
+      });
+      
+      if (onProductAdded) {
+        onProductAdded();
       }
+      
+      alert('Producto creado exitosamente');
     } catch (error) {
       console.error('Error:', error);
       setError('Error de conexión');

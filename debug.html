@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug localStorage</title>
+</head>
+<body>
+    <h1>Debug del Sistema BAS</h1>
+    <button onclick="showLocalStorage()">Mostrar localStorage</button>
+    <button onclick="clearLocalStorage()">Limpiar localStorage</button>
+    <button onclick="testLogin()">Test Login</button>
+    
+    <div id="output"></div>
+    
+    <script>
+        function showLocalStorage() {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            document.getElementById('output').innerHTML = `
+                <h2>Contenido del localStorage:</h2>
+                <h3>Usuario:</h3>
+                <pre>${user || 'No hay usuario'}</pre>
+                <h3>Token:</h3>
+                <pre>${token || 'No hay token'}</pre>
+                
+                <h3>Usuario parseado:</h3>
+                <pre>${user ? JSON.stringify(JSON.parse(user), null, 2) : 'No hay usuario'}</pre>
+            `;
+        }
+        
+        function clearLocalStorage() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            alert('localStorage limpiado');
+        }
+        
+        async function testLogin() {
+            try {
+                const response = await fetch('http://localhost:5010/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'warce', password: 'admin123' })
+                });
+                
+                const data = await response.json();
+                
+                document.getElementById('output').innerHTML = `
+                    <h2>Respuesta del Login:</h2>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+                // Guardar en localStorage
+                localStorage.setItem('user', JSON.stringify(data));
+                localStorage.setItem('token', data.token);
+                
+            } catch (error) {
+                document.getElementById('output').innerHTML = `
+                    <h2>Error:</h2>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

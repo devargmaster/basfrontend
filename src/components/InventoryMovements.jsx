@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { apiGet } from '../utils/api.js';
 
 export default function InventoryMovements() {
   const [movements, setMovements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
   const fetchMovements = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${baseUrl}/api/inventario/movimientos`);
-      const data = await response.json();
+      const data = await apiGet('/api/inventario/movimientos');
       setMovements(data);
     } catch (error) {
       console.error('Error al cargar movimientos:', error);

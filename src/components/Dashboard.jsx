@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiGet, apiPost } from '../utils/api.js';
 
 export default function Dashboard({ user }) {
   const [stats, setStats] = useState({
@@ -11,6 +12,7 @@ export default function Dashboard({ user }) {
     topCategorias: []
   });
   const [loading, setLoading] = useState(true);
+  const [updatingUser, setUpdatingUser] = useState(false);
 
   useEffect(() => {
     fetchDashboardStats();
@@ -18,33 +20,61 @@ export default function Dashboard({ user }) {
 
   const fetchDashboardStats = async () => {
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
-      const token = localStorage.getItem('token');
-      
-      const response = await fetch(`${baseUrl}/api/dashboard/stats`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
-      }
+      const data = await apiGet('/api/dashboard/stats');
+      setStats(data);
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  const updateUserInfo = async () => {
+    setUpdatingUser(true);
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No hay token disponible');
+      }
+
+      const updatedUser = await apiPost('/api/auth/validate', { token: token });
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      // Recargar la página para aplicar los cambios
+      window.location.reload();
+      
+    } catch (error) {
+      console.error('Error actualizando usuario:', error);
+      alert('Error al actualizar información del usuario');
+    } finally {
+      setUpdatingUser(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Bienvenido al sistema de inventario, {user.nombre}
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+          <p className="mt-1 text-sm text-gray-600">
+            Bienvenido al sistema de inventario, {user.nombre}
+            {user.rol && (
+              <span className="ml-2 text-blue-600">({user.rol.nombre})</span>
+            )}
+          </p>
+        </div>
+        
+        {/* Botón para actualizar información del usuario si no tiene rol */}
+        {!user.rol && (
+          <button
+            onClick={updateUserInfo}
+            disabled={updatingUser}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+          >
+            {updatingUser ? 'Actualizando...' : 'Actualizar Permisos'}
+          </button>
+        )}
       </div>
 
       {/* Cards de resumen */}

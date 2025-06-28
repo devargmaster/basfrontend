@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { apiGet, apiPost } from '../utils/api.js';
 
 export default function StockManagement() {
   const [products, setProducts] = useState([]);
@@ -12,13 +13,10 @@ export default function StockManagement() {
     numeroDocumento: ''
   });
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
   const fetchProductsWithStock = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${baseUrl}/api/inventario/productos-con-stock`);
-      const data = await response.json();
+      const data = await apiGet('/api/inventario/productos-con-stock');
       setProducts(data);
     } catch (error) {
       console.error('Error al cargar productos con stock:', error);
@@ -69,23 +67,11 @@ export default function StockManagement() {
 
       console.log('Enviando movimiento:', requestData);
 
-      const response = await fetch(`${baseUrl}/api/inventario/movimientos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData)
-      });
+      await apiPost('/api/inventario/movimientos', requestData);
 
-      if (response.ok) {
-        alert('Movimiento creado exitosamente');
-        handleCloseMovementModal();
-        fetchProductsWithStock(); 
-      } else {
-        const errorData = await response.text();
-        console.error('Error en respuesta:', errorData);
-        alert(`Error al crear movimiento: ${response.status}`);
-      }
+      alert('Movimiento creado exitosamente');
+      handleCloseMovementModal();
+      fetchProductsWithStock(); 
     } catch (error) {
       console.error('Error al crear movimiento:', error);
       alert('Error de conexión al crear movimiento');

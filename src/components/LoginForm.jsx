@@ -53,10 +53,9 @@ export default function LoginForm({ onLogin }) {
         <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
           <h3 className="text-sm font-medium text-blue-800 mb-2">Usuarios de prueba:</h3>
           <div className="text-xs text-blue-700 space-y-1">
-            <div><strong>Admin:</strong> admin / admin123</div>
-            <div><strong>Usuario:</strong> warce / 123456</div>
-            <div><strong>Usuario:</strong> jperez / juan123</div>
-            <div><strong>Usuario:</strong> mgarcia / maria123</div>
+            <div><strong>Admin:</strong> warce / admin123</div>
+            <div><strong>Gerente:</strong> ana.garcia / gerente123</div>
+            <div><strong>Empleado:</strong> carlos.lopez / empleado123</div>
           </div>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

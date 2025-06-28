@@ -4,6 +4,7 @@ export default function Layout({ user, onLogout, children, currentView, setCurre
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'products', label: 'Catálogo de Productos', icon: '📦' },
+    { id: 'categories', label: 'Categorías', icon: '🏷️' },
     { id: 'inventory', label: 'Gestión de Stock', icon: '📋' },
     { id: 'movements', label: 'Movimientos', icon: '📈' },
     { id: 'users', label: 'Usuarios', icon: '👥' },
