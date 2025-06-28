@@ -29,12 +29,7 @@ export default function MainContent({ user, currentView }) {
               <p className="mt-1 text-sm text-gray-600">
                 Administra el catálogo de productos del sistema
               </p>
-              <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                <p className="text-sm text-blue-800">
-                  💡 <strong>Nota:</strong> Para gestionar el stock de los productos, ve al módulo de{' '}
-                  <strong>"Gestión de Stock"</strong> donde podrás ver inventario actual y crear movimientos.
-                </p>
-              </div>
+
             </div>
             
             {/* Botón para mostrar/ocultar formulario */}
