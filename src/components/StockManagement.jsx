@@ -54,14 +54,21 @@ export default function StockManagement() {
     e.preventDefault();
     
     try {
-      const userId = 1; 
+      // Obtener el usuario logueado del localStorage
+      const storedUser = localStorage.getItem('user');
+      const currentUser = storedUser ? JSON.parse(storedUser) : null;
+      
+      if (!currentUser || !currentUser.id) {
+        alert('Error: No se pudo identificar el usuario. Por favor, inicia sesión nuevamente.');
+        return;
+      }
       
       const requestData = {
         productoId: selectedProduct.id,
         tipoMovimiento: movementForm.tipoMovimiento,
         cantidad: parseInt(movementForm.cantidad),
         motivo: movementForm.motivo || 'Movimiento manual',
-        usuarioId: userId,
+        usuarioId: currentUser.id,
         numeroDocumento: movementForm.numeroDocumento || null
       };
 

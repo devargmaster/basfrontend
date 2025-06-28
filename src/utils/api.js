@@ -1,5 +1,5 @@
 // Utilidad para hacer peticiones autenticadas a la API
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 /**
  * Obtiene los headers de autenticación
