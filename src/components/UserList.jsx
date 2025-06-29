@@ -129,18 +129,16 @@ export default function UserList({ currentUser }) {
     
     try {
       const updatedUser = {
-        id: editingId,
-        nombre: editForm.nombre,
-        apellido: editForm.apellido,
-        userName: editForm.userName,
+        nombre: editForm.nombre || null,
+        apellido: editForm.apellido || null,
+        userName: editForm.userName || null,
         email: editForm.email || null,
         telefono: editForm.telefono || null,
         rolId: editForm.rolId ? parseInt(editForm.rolId) : null,
-        activo: editForm.activo,
-        fechaModificacion: new Date().toISOString()
+        activo: editForm.activo
       };
 
-      await apiPut(`/api/usuarios/${editingId}`, updatedUser);
+      await apiPut(`/api/usuarios/update/${editingId}`, updatedUser);
 
       setEditingId(null);
       fetchUsers();

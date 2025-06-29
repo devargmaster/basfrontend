@@ -58,7 +58,7 @@ export default function CategoryForm({ onCategoryAdded, editingCategory, onEditC
       const categoryData = {
         nombre: form.nombre,
         descripcion: form.descripcion || null,
-        codigo: form.codigo.toUpperCase(),
+        codigo: form.codigo ? form.codigo.toUpperCase() : null,
         color: form.color,
         icono: form.icono,
         orden: parseInt(form.orden),

@@ -39,7 +39,16 @@ export const apiPost = async (endpoint, data) => {
   });
   
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    let errorMessage = `HTTP error! status: ${response.status}`;
+    try {
+      const errorData = await response.json();
+      if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+    } catch (e) {
+      // Si no se puede parsear la respuesta, usar el mensaje por defecto
+    }
+    throw new Error(errorMessage);
   }
   
   return response.json();
@@ -56,7 +65,16 @@ export const apiPut = async (endpoint, data) => {
   });
   
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    let errorMessage = `HTTP error! status: ${response.status}`;
+    try {
+      const errorData = await response.json();
+      if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+    } catch (e) {
+      // Si no se puede parsear la respuesta, usar el mensaje por defecto
+    }
+    throw new Error(errorMessage);
   }
   
   return response.json();

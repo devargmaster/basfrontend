@@ -52,14 +52,10 @@ export default function ProductForm({ onProductAdded }) {
         precio: parseFloat(form.precio),
         categoriaId: parseInt(form.categoriaId),
         marca: form.marca,
-        codigoBarras: form.codigoBarras,
+        codigoBarras: form.codigoBarras?.trim() || null,
         unidadMedida: form.unidadMedida,
-        stockMinimo: parseInt(form.stockMinimo) || 0,
-        stockMaximo: parseInt(form.stockMaximo) || 100,
-        ubicacionFisica: form.ubicacionFisica,
-        fechaVencimiento: form.fechaVencimiento || null,
-        proveedor: form.proveedor,
-        notas: form.notas,
+        proveedor: form.proveedor?.trim() || null,
+        observaciones: form.notas?.trim() || null,
         activo: true
       };
 
