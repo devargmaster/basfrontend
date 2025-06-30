@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiGet, apiDelete } from '../utils/api.js';
+import { apiGet, apiDelete, apiPut } from '../utils/api.js';
 
 export default function CategoryList({ refresh, onEdit }) {
   const [categories, setCategories] = useState([]);
@@ -42,21 +42,12 @@ export default function CategoryList({ refresh, onEdit }) {
         activo: !category.activo
       };
 
-      const response = await fetch(`${baseUrl}/api/categorias/${category.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCategory)
-      });
-
-      if (response.ok) {
-        fetchCategories();
-        alert(`Categoría ${updatedCategory.activo ? 'activada' : 'desactivada'} exitosamente`);
-      } else {
-        alert('Error al actualizar categoría');
-      }
+      await apiPut(`/api/categorias/${category.id}`, updatedCategory);
+      fetchCategories();
+      alert(`Categoría ${updatedCategory.activo ? 'activada' : 'desactivada'} exitosamente`);
     } catch (error) {
       console.error('Error updating category:', error);
-      alert('Error de conexión al actualizar categoría');
+      alert(`Error al actualizar categoría: ${error.message}`);
     }
   };
 
