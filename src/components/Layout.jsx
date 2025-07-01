@@ -10,6 +10,11 @@ export default function Layout({ user, onLogout, children, currentView, setCurre
     { id: 'users', label: 'Usuarios', icon: '👥' },
   ];
 
+  // Agregar logs solo para administradores
+  const adminMenuItems = user?.rol?.esAdministrador 
+    ? [...menuItems, { id: 'logs', label: 'Logs de Usuario', icon: '📋' }]
+    : menuItems;
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -43,7 +48,7 @@ export default function Layout({ user, onLogout, children, currentView, setCurre
         <nav className="w-64 bg-white shadow-sm h-screen sticky top-0">
           <div className="p-4">
             <ul className="space-y-2">
-              {menuItems.map((item) => (
+              {adminMenuItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => setCurrentView(item.id)}

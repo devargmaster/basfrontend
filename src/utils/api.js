@@ -116,3 +116,45 @@ export const apiFetch = async (endpoint, options = {}) => {
   
   return response;
 };
+
+/**
+ * Funciones específicas para logs de usuario
+ */
+
+/**
+ * Obtiene logs de usuario con filtros opcionales
+ */
+export const getUserLogs = async (filters = {}) => {
+  const params = new URLSearchParams();
+  
+  if (filters.userId) params.append('userId', filters.userId);
+  if (filters.fromDate) params.append('fromDate', filters.fromDate);
+  if (filters.toDate) params.append('toDate', filters.toDate);
+  if (filters.limit) params.append('limit', filters.limit);
+  
+  const queryString = params.toString();
+  const endpoint = `/api/userlogs${queryString ? '?' + queryString : ''}`;
+  
+  return apiGet(endpoint);
+};
+
+/**
+ * Obtiene logs por acción específica
+ */
+export const getUserLogsByAction = async (action, limit = 100) => {
+  return apiGet(`/api/userlogs/by-action/${encodeURIComponent(action)}?limit=${limit}`);
+};
+
+/**
+ * Obtiene logs de un usuario específico
+ */
+export const getUserLogsByUserId = async (userId, limit = 100) => {
+  return apiGet(`/api/userlogs/user/${userId}?limit=${limit}`);
+};
+
+/**
+ * Registra un log manual
+ */
+export const logManualAction = async (logData) => {
+  return apiPost('/api/userlogs/manual', logData);
+};

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiGet, apiPost } from '../utils/api.js';
+import LogsSummary from './LogsSummary';
 
 export default function Dashboard({ user }) {
   const [stats, setStats] = useState({
@@ -168,47 +169,55 @@ export default function Dashboard({ user }) {
         </div>
       </div>
 
-      {/* Actividad reciente */}
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Movimientos Recientes
-          </h3>
-          <div className="mt-5">
-            {loading ? (
-              <div className="text-sm text-gray-500">Cargando...</div>
-            ) : stats.movimientosRecientes && stats.movimientosRecientes.length > 0 ? (
-              <div className="space-y-3">
-                {stats.movimientosRecientes.map((movimiento, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-md">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-2 h-2 rounded-full ${
-                        movimiento.tipoMovimiento === 'Entrada' ? 'bg-green-500' : 
-                        movimiento.tipoMovimiento === 'Salida' ? 'bg-red-500' : 'bg-blue-500'
-                      }`}></div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{movimiento.producto}</p>
-                        <p className="text-sm text-gray-500">
-                          {movimiento.tipoMovimiento}: {movimiento.cantidad} unidades
+      {/* Actividad reciente y logs (layout responsivo) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Movimientos recientes */}
+        <div className="bg-white shadow rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              Movimientos Recientes
+            </h3>
+            <div className="mt-5">
+              {loading ? (
+                <div className="text-sm text-gray-500">Cargando...</div>
+              ) : stats.movimientosRecientes && stats.movimientosRecientes.length > 0 ? (
+                <div className="space-y-3">
+                  {stats.movimientosRecientes.map((movimiento, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-md">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-2 h-2 rounded-full ${
+                          movimiento.tipoMovimiento === 'Entrada' ? 'bg-green-500' : 
+                          movimiento.tipoMovimiento === 'Salida' ? 'bg-red-500' : 'bg-blue-500'
+                        }`}></div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{movimiento.producto}</p>
+                          <p className="text-sm text-gray-500">
+                            {movimiento.tipoMovimiento}: {movimiento.cantidad} unidades
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-500">{movimiento.usuario}</p>
+                        <p className="text-xs text-gray-400">
+                          {new Date(movimiento.fecha).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500">{movimiento.usuario}</p>
-                      <p className="text-xs text-gray-400">
-                        {new Date(movimiento.fecha).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-sm text-gray-500">
-                <p>No hay movimientos recientes para mostrar.</p>
-              </div>
-            )}
+                  ))}
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500">
+                  <p>No hay movimientos recientes para mostrar.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Logs Summary - Solo para administradores */}
+        {user.rol && user.rol.esAdministrador && (
+          <LogsSummary />
+        )}
       </div>
 
       {/* Top Categorías */}
@@ -253,6 +262,78 @@ export default function Dashboard({ user }) {
           </div>
         </div>
       </div>
+
+      {/* Panel de Administración - Solo para administradores */}
+      {user.rol && user.rol.esAdministrador && (
+        <div className="bg-white shadow rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              🔧 Panel de Administración
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">📊</span>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Logs de Usuario</h4>
+                    <p className="text-sm text-gray-500">Auditoría y monitoreo</p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <button
+                    onClick={() => window.location.hash = '#logs'}
+                    className="w-full bg-blue-600 text-white py-2 px-3 rounded-md hover:bg-blue-700 text-sm"
+                  >
+                    Ver Logs
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">👥</span>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Gestión de Usuarios</h4>
+                    <p className="text-sm text-gray-500">Administrar usuarios</p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <button
+                    onClick={() => window.location.hash = '#users'}
+                    className="w-full bg-green-600 text-white py-2 px-3 rounded-md hover:bg-green-700 text-sm"
+                  >
+                    Gestionar Usuarios
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">📈</span>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Reportes Avanzados</h4>
+                    <p className="text-sm text-gray-500">Análisis detallado</p>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <button
+                    onClick={() => alert('Funcionalidad en desarrollo')}
+                    className="w-full bg-purple-600 text-white py-2 px-3 rounded-md hover:bg-purple-700 text-sm"
+                  >
+                    Ver Reportes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
