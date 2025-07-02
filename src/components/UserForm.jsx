@@ -48,7 +48,7 @@ export default function UserForm({ onUserAdded, onCancel }) {
 
       await apiPost('/api/usuarios', userData);
 
-      // Limpiar formulario y actualizar lista
+
       setForm({ 
         nombre: '', 
         apellido: '', 

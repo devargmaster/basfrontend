@@ -14,7 +14,7 @@ export default function UserLogs() {
   });
   const [activeTab, setActiveTab] = useState('all');
 
-  // Acciones comunes para filtros rápidos
+
   const commonActions = [
     'Login Success',
     'Login Failed', 

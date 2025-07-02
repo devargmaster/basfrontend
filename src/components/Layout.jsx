@@ -10,7 +10,7 @@ export default function Layout({ user, onLogout, children, currentView, setCurre
     { id: 'users', label: 'Usuarios', icon: '👥' },
   ];
 
-  // Agregar logs solo para administradores
+
   const adminMenuItems = user?.rol?.esAdministrador 
     ? [...menuItems, { id: 'logs', label: 'Logs de Usuario', icon: '📋' }]
     : menuItems;

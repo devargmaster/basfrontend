@@ -9,7 +9,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState('dashboard');
 
   useEffect(() => {
-    // Verificar si hay usuario logueado
+
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     
@@ -17,7 +17,7 @@ export default function App() {
       const userData = JSON.parse(storedUser);
       console.log('Datos de usuario almacenados:', userData);
       
-      // Si el usuario no tiene información de rol, validar token para obtener datos actualizados
+
       if (!userData.rol) {
         console.log('Usuario sin información de rol, validando token...');
         apiPost('/api/auth/validate', { token: storedToken })
@@ -28,7 +28,7 @@ export default function App() {
         })
         .catch(err => {
           console.error('Error validando token:', err);
-          // Si falla la validación, usar los datos existentes sin forzar logout
+
           console.log('Usando datos de usuario existentes sin rol');
           setUser(userData);
         });
